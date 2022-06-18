@@ -1,12 +1,14 @@
 package com.property.management.tenant.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.property.management.tenant.entity.Tenant;
@@ -16,26 +18,32 @@ import com.property.management.tenant.repository.TenantRepository;
 public class TenantServiceImplementation implements TenantService{
 	private final static Logger LOGGER = LoggerFactory.getLogger(TenantServiceImplementation.class);
 	
-	
+	@Autowired
 	private TenantRepository tenantRepository;
+	public TenantServiceImplementation(TenantRepository tenantRepository) {
+		super();
+		this.tenantRepository = tenantRepository;
+	}
 
 	//Creates a new Tenant
 	@Override
 	public void createNewTenant(Tenant tenant) {
 				// TODO Auto-generated method stub
 		tenantRepository.save(tenant);
-		LOGGER.info(String.format("Added a new tenant %s  %s at %s")
-				, tenant.getFName(), tenant.getSurname(), LocalDateTime.now()) ;
+		LOGGER.info(String.format("Added a new tenant " + tenant.getFirstname()
+		+ " " +tenant.getSurname()+ " " + LocalDateTime.now())) ;
 	}
 	
 	//Delete a new Tenant By Id
 	@Override
 	public void removeTenant(int Id) {
 		// TODO Auto-generated method stub
+		
 		Tenant tenant = new Tenant();
+			
 		tenantRepository.deleteById(Id);
 		LOGGER.info(String.format("Deleted  tenant %s  %s at %s")
-				, tenant.getFName(), tenant.getSurname(), LocalDateTime.now()) ;
+				, tenant.getFirstname(), tenant.getSurname(), LocalDateTime.now()) ;
 	}
 
 
@@ -54,8 +62,10 @@ public class TenantServiceImplementation implements TenantService{
 	
 	@Override
 	public List<Tenant> readAllTenant() {
+		List<Tenant> tenants = new ArrayList<>();
 		// TODO Auto-generated method stub
-		return tenantRepository.findAll();
+		 tenantRepository.findAll().forEach(tenants::add);
+		 return tenants;
 	}
 
 	@Override
@@ -77,7 +87,7 @@ public class TenantServiceImplementation implements TenantService{
 	public List<Tenant> readTenantByFirstName(String fName) {
 		// TODO Auto-generated method stub
 		return tenantRepository.findAll()
-				.stream().filter(name -> name.getFName().equalsIgnoreCase(fName))
+				.stream().filter(name -> name.getFirstname().equalsIgnoreCase(fName))
 				.sorted().collect(Collectors.toList());
 		
 	}

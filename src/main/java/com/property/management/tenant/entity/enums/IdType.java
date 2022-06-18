@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.property.management.tenant.entity;
+package com.property.management.tenant.entity.enums;
 
 /**
  * @author Michael Shaba
@@ -13,6 +13,7 @@ public enum IdType {
 SOUTH_AFRICA_ID("SAID"),
 PERMANENT_RESIDENCE_PERMIT("PRP"),
 TEMPORAY_RESIDENCE_PERMIT("TRP"),
+PASSPORT("Passport"),
 ASSYLUM("assylum");
 
 	final String identification_type;

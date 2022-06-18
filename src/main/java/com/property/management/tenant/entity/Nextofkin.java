@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
@@ -22,14 +24,16 @@ import lombok.Data;
 @Entity
 @Table
 @Data
-public class NextOfKin implements Serializable {
+public class Nextofkin implements Serializable {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GenericGenerator(name="kaugen" , strategy="increment")
+	@GeneratedValue(generator="kaugen")
 	private int Id;
+
 	
-	private String fName;
-	private String lName;
+	private String fname;
+	private String lname;
 	private String tel;
 	private String email;
 	private String address;

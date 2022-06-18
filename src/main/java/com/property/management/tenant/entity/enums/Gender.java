@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.property.management.tenant.entity;
+package com.property.management.tenant.entity.enums;
 
 /**
  * @author Michael
@@ -10,6 +10,8 @@ package com.property.management.tenant.entity;
 public enum Gender {
 	
 	FEMALE,
-	MALE;
+	MALE
+
+	
 
 }

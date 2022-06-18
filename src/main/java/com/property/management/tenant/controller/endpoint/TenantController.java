@@ -2,8 +2,7 @@ package com.property.management.tenant.controller.endpoint;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.property.management.tenant.entity.Tenant;
+import com.property.management.tenant.entity.TenantStatus;
+import com.property.management.tenant.messaging.config.MessagingConfig;
 import com.property.management.tenant.service.TenantService;
 
 @Controller
@@ -26,10 +27,14 @@ public class TenantController {
 	@Autowired
 	TenantService tenantService;
 	
+	@Autowired
+	private RabbitTemplate template;
 	
+
+
 	//Return all Tenants in the repository
-	@GetMapping("/tenants")
-	public ResponseEntity<List<Tenant>> getAllTenants(){
+	@GetMapping("/getAlltenants")
+	public ResponseEntity<List<Tenant>> findAllTenants(){
 		List<Tenant> tenants = tenantService.readAllTenant();
 		return new  ResponseEntity<List<Tenant>>(tenants, HttpStatus.OK);
 		
@@ -71,9 +76,12 @@ public class TenantController {
 			}
 		
 		//Create a new tenant
-		@PostMapping("/save/tenant")
-		public void createTenant(@RequestBody Tenant tenant) {
+		@PostMapping("/create/tenant")
+		public ResponseEntity<Tenant>createTenant(@RequestBody Tenant tenant) {
 		tenantService.createNewTenant(tenant);
+		TenantStatus  tenantStatus = new TenantStatus(tenant.getId(), tenant , "PROCESS", "You are approved to occupy the property, "
+				+ "we gettting the property ready for you to move in ");
+		//template.convertAndSend(MessagingConfig.EXCHANGE , MessagingConfig.ROUTING_KEY, tenantStatus);
+		return new ResponseEntity<Tenant>(tenant, HttpStatus.CREATED);
 		}
-	
 }
